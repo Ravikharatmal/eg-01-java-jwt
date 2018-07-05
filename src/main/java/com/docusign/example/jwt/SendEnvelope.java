@@ -13,7 +13,6 @@ class SendEnvelope extends ExampleBase {
 
     private static final String DOC_2_DOCX = "World_Wide_Corp_Battle_Plan_Trafalgar.docx";
     private static final String DOC_3_PDF = "World_Wide_Corp_lorem.pdf";
-
     private static final String ENVELOPE_1_DOCUMENT_1 = "<!DOCTYPE html>" +
             "<html>" +
             "    <head>" +
@@ -52,18 +51,20 @@ class SendEnvelope extends ExampleBase {
      */
     public EnvelopeSummary sendEnvelope() throws ApiException, IOException {
 
+        this.checkToken();
+
         EnvelopeDefinition envelope = this.createEvelope();
-        this.validateToken();
+
         EnvelopesApi envelopeApi = new EnvelopesApi(this.apiClient);
 
-        EnvelopeSummary results = envelopeApi.createEnvelope(this.accountID, envelope);
+        EnvelopeSummary results = envelopeApi.createEnvelope(this.getAccountId(), envelope);
 
         return results;
     }
     /**
-     * create envelope from template
+     * This method creates envelope from template
      *
-     * @return
+     * @return instance of EnvelopeDefinition
      */
     public EnvelopeDefinition createEvelope() throws IOException {
         EnvelopeDefinition envelopeDefinition = new EnvelopeDefinition();
@@ -110,6 +111,7 @@ class SendEnvelope extends ExampleBase {
     }
 
     /**
+     * ﻿This method creates Recipients instance and populates its signers and carbon copies
      *
      * @param signer
      * @param cc
@@ -126,8 +128,10 @@ class SendEnvelope extends ExampleBase {
 
     /**
      *
-     * @param signer
-     * @param signers
+     * ﻿This method create Tabs
+     *
+     * @param signer - ﻿Signer instance to be set tabs
+     * @param signers - ﻿SignHere array
      */
     private void setSignerTabs(Signer signer, SignHere...signers) {
         Tabs tabs = new Tabs();
@@ -136,17 +140,18 @@ class SendEnvelope extends ExampleBase {
     }
 
     /**
+     *﻿ This method create SignHere anchor
      *
-     * @param anchorString
-     * @param anchorUnits
-     * @param anchorXOffset
-     * @param anchorYOffset
+     * @param anchorPattern ﻿- anchor pattern
+     * @param anchorUnits -﻿ anchor units
+     * @param anchorXOffset - ﻿anchor x offset
+     * @param anchorYOffset - ﻿anchor y offset
      * @return
      */
-    private SignHere createSignHere(String anchorString, String anchorUnits,
+    private SignHere createSignHere(String anchorPattern, String anchorUnits,
                                     String anchorXOffset, String anchorYOffset) {
         SignHere signHere = new SignHere();
-        signHere.setAnchorString(anchorString);
+        signHere.setAnchorString(anchorPattern);
         signHere.setAnchorUnits(anchorUnits);
         signHere.setAnchorXOffset(anchorXOffset);
         signHere.anchorYOffset(anchorYOffset);
@@ -154,8 +159,9 @@ class SendEnvelope extends ExampleBase {
     }
 
     /**
-     * create carbon copy object
-     * @return
+     * This method creates CarbonCopy instance and populate its members
+     *
+     * @return {CarbonCopy} instance
      */
     private CarbonCopy createCarbonCopy() {
         CarbonCopy cc = new CarbonCopy();
@@ -167,8 +173,9 @@ class SendEnvelope extends ExampleBase {
     }
 
     /**
+     * ﻿This method creates Signer instance and populates its members
      *
-     * @return
+     * @return Signer instance
      */
     private Signer createSigner() {
         Signer signer = new Signer();
