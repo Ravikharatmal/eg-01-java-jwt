@@ -26,14 +26,14 @@ public class ListEnvelopes extends ExampleBase{
      */
     public EnvelopesInformation list() throws ApiException, IOException {
 
-        this.validateToken();
+        this.checkToken();
         EnvelopesApi envelopeApi = new EnvelopesApi(this.apiClient);
 
         ListStatusChangesOptions options = envelopeApi.new ListStatusChangesOptions();
         LocalDate date = LocalDate.now().minusDays(30);
         options.setFromDate(date.toString("yyyy/MM/dd"));
 
-        return envelopeApi.listStatusChanges(this.accountID, options);
+        return envelopeApi.listStatusChanges(this.getAccountId(), options);
 
     }
 }
