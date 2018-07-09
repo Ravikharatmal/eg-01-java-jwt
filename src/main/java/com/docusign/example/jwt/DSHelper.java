@@ -62,35 +62,6 @@ public class DSHelper {
         return temp;
     }
 
-    /**
-     * This method check if directory exists and if not it create it.
-     *
-     * @param dirName - directory path
-     * @return - returns absolute path
-     */
-    public static String ensureDirExistance(String dirName) {
-        File dir = new File(dirName);
-
-        if(!dir.exists()){
-            dir.mkdirs();
-        }
-
-        return dir.getAbsolutePath();
-    }
-
-    /**
-     * This method to write byte array to file
-     * @param path - path to file
-     * @param bytesArray - byte array to write
-     * @throws IOException
-     */
-    public static void writeByteArrayToFile(String path, byte [] bytesArray) throws IOException {
-
-        try (FileOutputStream fos = new FileOutputStream(path)){
-            fos.write(bytesArray);
-        }
-
-    }
 
     /**
      * This method printing pretty json format
