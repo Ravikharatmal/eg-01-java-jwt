@@ -28,36 +28,10 @@ public class JWTExample {
                     result.getEnvelopeId()));
 
             System.out.println("\nList envelopes in the account...");
-            EnvelopesInformation envelopesList = new ListEnvelopes(apiClient).list();
+            new ListEnvelopes(apiClient).list();
 
-            List<Envelope> envelopes = envelopesList.getEnvelopes();
-
-            if(envelopesList != null && envelopes.size() > 2) {
-                System.out.println(
-                        String.format("Results for %d envelopes were returned. Showing the first two:",
-                        envelopesList.getEnvelopes().size()));
-
-                envelopesList.setEnvelopes(Arrays.asList(envelopes.get(0), envelopes.get(1)));
-            }
-
-            String firstEnvelopeId= null;
-            // Save an envelopeId for later use if an envelope list was returned (result set could be empty)
-            if(envelopes != null && envelopes.get(0) != null){
-                firstEnvelopeId = envelopes.get(0).getEnvelopeId();
-            }
-
-            printPrettyJSON(envelopesList);
-
-            System.out.println("\nGet an envelope's status...");
-            Envelope envelope = new GetEnvelopeStatus(apiClient).getEnvelope(firstEnvelopeId);
-            printPrettyJSON(envelope);
-
-            System.out.println ("\nList an envelope's recipients and their status...");
-            Recipients recipients = new ListEnvelopeRecipients(apiClient).list(firstEnvelopeId);
-            printPrettyJSON(recipients);
-
-            System.out.println("\nDownload an envelope's document(s)...");
-            new GetEnvelopeDocuments(apiClient).download(firstEnvelopeId);
+            System.out.println("Done. Hit enter to exit the example");
+            System.in.read();
 
         } catch (IOException e) {
             e.printStackTrace();
