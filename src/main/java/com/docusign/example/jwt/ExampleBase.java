@@ -17,7 +17,7 @@ public class ExampleBase {
     private static final long TOKEN_EXPIRATION_IN_SECONDS = 3600;
     private static final long TOKEN_REPLACEMENT_IN_MILLISECONDS = 10*60*1000;
 
-    private static OAuth.UserInfo.Account _account;
+    private static OAuth.Account _account;
     private static File privateKeyTempFile = null;
     private static long expiresIn;
     private static String _token = null;
@@ -63,25 +63,25 @@ public class ExampleBase {
         expiresIn = System.currentTimeMillis() + (TOKEN_EXPIRATION_IN_SECONDS * 1000);
     }
 
-    private OAuth.UserInfo.Account getAccountInfo(ApiClient client) throws ApiException {
+    private OAuth.Account getAccountInfo(ApiClient client) throws ApiException {
         //TODO: check valid token
         OAuth.UserInfo userInfo = client.getUserInfo(client.getAccessToken());
-        OAuth.UserInfo.Account accountInfo = null;
+        OAuth.Account accountInfo = null;
 
         //TODO: fix the order of check
         if(DSConfig.TARGET_ACCOUNT_ID == null || DSConfig.TARGET_ACCOUNT_ID.length() == 0){
-            List<OAuth.UserInfo.Account> accounts = userInfo.getAccounts();
+            List<OAuth.Account> accounts = userInfo.getAccounts();
 
-            OAuth.UserInfo.Account acct = this.find(accounts, new ICondition<OAuth.UserInfo.Account>() {
-                public boolean test(OAuth.UserInfo.Account member) {
+            OAuth.Account acct = this.find(accounts, new ICondition<OAuth.Account>() {
+                public boolean test(OAuth.Account member) {
                     return (member.getIsDefault() == "true");
                 }
             });
 
             if (acct != null) return acct;
 
-            acct = this.find(accounts, new ICondition<OAuth.UserInfo.Account>() {
-                public boolean test(OAuth.UserInfo.Account member) {
+            acct = this.find(accounts, new ICondition<OAuth.Account>() {
+                public boolean test(OAuth.Account member) {
                     return (member.getAccountId() == DSConfig.TARGET_ACCOUNT_ID);
                 }
             });
@@ -93,8 +93,8 @@ public class ExampleBase {
         return accountInfo;
     }
 
-    private OAuth.UserInfo.Account find(List<OAuth.UserInfo.Account> accounts, ICondition<OAuth.UserInfo.Account> criteria) {
-        for (OAuth.UserInfo.Account acct: accounts) {
+    private OAuth.Account find(List<OAuth.Account> accounts, ICondition<OAuth.Account> criteria) {
+        for (OAuth.Account acct: accounts) {
             if(criteria.test(acct)){
                 return acct;
             }
