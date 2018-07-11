@@ -20,7 +20,7 @@ public class JWTExample {
     public static void main(String args[]) {
         try {
             System.setProperty("https.protocols","TLSv1.2");
-            System.out.println("\nSending and envelope...");
+            System.out.println("\nSending an envelope...");
             EnvelopeSummary result = new SendEnvelope(apiClient).sendEnvelope();
             System.out.println(
                     String.format("Envelope status: %s. Envelope ID: %s",
@@ -28,7 +28,17 @@ public class JWTExample {
                     result.getEnvelopeId()));
 
             System.out.println("\nList envelopes in the account...");
-            new ListEnvelopes(apiClient).list();
+            EnvelopesInformation envelopesList = new ListEnvelopes(apiClient).list();
+
+            List<Envelope> envelopes = envelopesList.getEnvelopes();
+            if(envelopesList != null && envelopes.size() > 2) {
+                System.out.println(
+                        String.format("Results for %d envelopes were returned. Showing the first two:",
+                                envelopesList.getEnvelopes().size()));
+                                envelopesList.setEnvelopes(Arrays.asList(envelopes.get(0), envelopes.get(1)));
+            }
+
+            printPrettyJSON(envelopesList);
 
             System.out.println("Done. Hit enter to exit the example");
             System.in.read();
