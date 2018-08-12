@@ -27,10 +27,19 @@ public final class DSConfig {
     public static final String PRIVATE_KEY_FILE;
     public static final String PRIVATE_KEY;
     public static final String AUTHENTICATION_URL = "https://account-d.docusign.com";
-    public static final String AUD = "account-d.docusign.com"; // use account.docusign.com for production
+    public static final String DS_AUTH_SERVER;
     public static final String API = "restapi/v2";
     public static final String PERMISSION_SCOPES = "signature impersonation";
     public static final String JWT_SCOPE = "signature";
+
+    public static final String AUD () {
+        if(DS_AUTH_SERVER != null && DS_AUTH_SERVER.startsWith("https://"))
+            return DS_AUTH_SERVER.substring(8);
+        else if(DS_AUTH_SERVER != null && DS_AUTH_SERVER.startsWith("http://"))
+            return DS_AUTH_SERVER.substring(7);
+
+        return DS_AUTH_SERVER;
+    }
 
     static {
         // Try load from environment variables
@@ -50,6 +59,7 @@ public final class DSConfig {
         CC_NAME = fetchValue(config, "DS_CC_1_NAME");
         PRIVATE_KEY_FILE = fetchValue(config, "DS_PRIVATE_KEY_FILE");
         PRIVATE_KEY = fetchValue(config, "DS_PRIVATE_KEY");
+        DS_AUTH_SERVER = fetchValue(config, "DS_AUTH_SERVER"); // use account.docusign.com for production
     }
 
     /**

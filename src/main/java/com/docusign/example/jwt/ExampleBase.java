@@ -46,7 +46,7 @@ public class ExampleBase {
         apiClient.configureJWTAuthorizationFlow(
                 privateKeyTempFile.getAbsolutePath(),
                 privateKeyTempFile.getAbsolutePath(),
-                DSConfig.AUD,
+                DSConfig.AUD(),
                 DSConfig.CLIENT_ID,
                 DSConfig.IMPERSONATED_USER_GUID,
                 TOKEN_EXPIRATION_IN_SECONDS);
