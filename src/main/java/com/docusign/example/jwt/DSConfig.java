@@ -27,7 +27,7 @@ public final class DSConfig {
     public static final String PRIVATE_KEY_FILE;
     public static final String PRIVATE_KEY;
     public static final String AUTHENTICATION_URL = "https://account-d.docusign.com";
-    public static final String AUD = "account-d.docusign.com";
+    public static final String AUD = "account-d.docusign.com"; // use account.docusign.com for production
     public static final String API = "restapi/v2";
     public static final String PERMISSION_SCOPES = "signature impersonation";
     public static final String JWT_SCOPE = "signature";
