@@ -29,7 +29,7 @@ public final class DSConfig {
     public static final String AUTHENTICATION_URL = "https://account-d.docusign.com";
     public static final String DS_AUTH_SERVER;
     public static final String API = "restapi/v2";
-    public static final String PERMISSION_SCOPES = "signature impersonation";
+    public static final String PERMISSION_SCOPES = "signature%20impersonation";
     public static final String JWT_SCOPE = "signature";
 
     public static final String AUD () {

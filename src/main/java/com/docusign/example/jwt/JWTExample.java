@@ -46,7 +46,28 @@ public class JWTExample {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ApiException e) {
-            e.printStackTrace();
+            System.err.println("\nDocuSign Exception!");
+
+            // Special handling for consent_required
+            String body = e.getResponseBody();
+            if(body != null && body.contains("consent_required")){
+                String consent_url = String.format("%s/oauth/auth?response_type=code&scope=%s" +
+                        "&client_id=%s" +
+                        "&redirect_uri=%s",
+                        DSConfig.DS_AUTH_SERVER,
+                        DSConfig.PERMISSION_SCOPES,
+                        DSConfig.CLIENT_ID,
+                        DSConfig.OAUTH_REDIRECT_URI);
+                System.err.println("\nC O N S E N T   R E Q U I R E D" +
+                        "\nAsk the user who will be impersonated to run the following url: " +
+                        "\n"+ consent_url+
+                        "\n\nIt will ask the user to login and to approve access by your application." +
+                        "\nAlternatively, an Administrator can use Organization Administration to" +
+                        "\npre-approve one or more users.");
+            } else {
+                System.err.println(String.format("    Reason: %d", e.getCode()));
+                System.err.println(String.format("    Error Reponse: %s", body));
+            }
         }
     }
 }
