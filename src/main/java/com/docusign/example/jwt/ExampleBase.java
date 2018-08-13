@@ -15,7 +15,7 @@ import java.util.List;
 public class ExampleBase {
 
     private static final long TOKEN_EXPIRATION_IN_SECONDS = 3600;
-    private static final long TOKEN_REPLACEMENT_IN_MILLISECONDS = 10*60*1000;
+    private static final long TOKEN_REPLACEMENT_IN_MILLISECONDS = 10 * 60 * 1000;
 
     private static OAuth.Account _account;
     private static File privateKeyTempFile = null;

@@ -49,12 +49,12 @@ public class DSHelper {
         try {
             temp = File.createTempFile(fileSuffix,".tmp");
             writer = new BufferedWriter(new FileWriter(temp.getAbsolutePath()));
-            writer.write(DSConfig.PRIVATE_KEY);
-            writer.close();
+            writer.write(DSConfig.PRIVATE_KEY
+                    .replace("\\n\\","\n"));
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(writer != null){
+            if(writer != null) {
                 writer.close();
             }
         }
