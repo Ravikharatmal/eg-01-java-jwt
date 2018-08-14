@@ -68,7 +68,7 @@ class SendEnvelope extends ExampleBase {
      */
     public EnvelopeDefinition createEvelope() throws IOException {
         EnvelopeDefinition envelopeDefinition = new EnvelopeDefinition();
-        envelopeDefinition.setEmailSubject("Please sign this document sent from Node SDK");
+        envelopeDefinition.setEmailSubject("Please sign this document sent from the Java SDK");
 
         Document doc1 = createDocumentFromTemplate("1","Order acknowledgement","html",
                 ENVELOPE_1_DOCUMENT_1.getBytes());
