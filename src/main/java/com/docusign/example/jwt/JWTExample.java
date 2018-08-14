@@ -49,8 +49,8 @@ public class JWTExample {
             System.err.println("\nDocuSign Exception!");
 
             // Special handling for consent_required
-            String body = e.getResponseBody();
-            if(body != null && body.contains("consent_required")){
+            String message = e.getMessage();
+            if(message != null && message.contains("consent_required")){
                 String consent_url = String.format("%s/oauth/auth?response_type=code&scope=%s" +
                         "&client_id=%s" +
                         "&redirect_uri=%s",
@@ -66,7 +66,7 @@ public class JWTExample {
                         "\npre-approve one or more users.");
             } else {
                 System.err.println(String.format("    Reason: %d", e.getCode()));
-                System.err.println(String.format("    Error Reponse: %s", body));
+                System.err.println(String.format("    Error Reponse: %s", e.getResponseBody()));
             }
         }
     }
