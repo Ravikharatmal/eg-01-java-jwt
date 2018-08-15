@@ -48,7 +48,7 @@ SDK will solve this issue.
 
 ### IntelliJ installation
 
-See the [IntelliJ instructions]().
+See the [IntelliJ instructions](https://github.com/docusign/eg-01-java-jwt/blob/master/docs/Readme.IntelliJ.md).
 
 ## Configure the example
 
