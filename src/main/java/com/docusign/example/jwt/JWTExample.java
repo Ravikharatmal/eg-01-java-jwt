@@ -27,7 +27,7 @@ public class JWTExample {
                     result.getStatus(),
                     result.getEnvelopeId()));
 
-            System.out.println("\nList envelopes in the account...");
+            System.out.println("\nListing envelopes in the account...");
             EnvelopesInformation envelopesList = new ListEnvelopes(apiClient).list();
 
             List<Envelope> envelopes = envelopesList.getEnvelopes();

@@ -52,13 +52,9 @@ class SendEnvelope extends ExampleBase {
     public EnvelopeSummary sendEnvelope() throws ApiException, IOException {
 
         this.checkToken();
-
         EnvelopeDefinition envelope = this.createEvelope();
-
         EnvelopesApi envelopeApi = new EnvelopesApi(this.apiClient);
-
         EnvelopeSummary results = envelopeApi.createEnvelope(this.getAccountId(), envelope);
-
         return results;
     }
     /**

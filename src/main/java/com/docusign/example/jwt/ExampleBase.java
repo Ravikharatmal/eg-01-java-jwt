@@ -28,7 +28,6 @@ public class ExampleBase {
     };
 
 
-
     public ExampleBase(ApiClient apiClient) throws IOException {
         privateKeyTempFile = DSHelper.createPrivateKeyTempFile("private-key");
         this.apiClient =  apiClient;
@@ -43,6 +42,10 @@ public class ExampleBase {
     }
 
     private void updateToken() throws IOException, ApiException {
+        System.out.println("\nFetching an access token via JWT grant...");
+
+        // Note: this SDK method gives a spurious warning, "Could not reconstruct the public key"
+        // which should be ignored. A forthcoming version of the SDK will fix the issue.
         apiClient.configureJWTAuthorizationFlow(
                 privateKeyTempFile.getAbsolutePath(),
                 privateKeyTempFile.getAbsolutePath(),
@@ -50,6 +53,7 @@ public class ExampleBase {
                 DSConfig.CLIENT_ID,
                 DSConfig.IMPERSONATED_USER_GUID,
                 TOKEN_EXPIRATION_IN_SECONDS);
+        System.out.println("Done. Continuing...\n");
         //TODO: this is work around to fix incorrect set basePath account
         apiClient.setBasePath(null);
 
@@ -64,11 +68,9 @@ public class ExampleBase {
     }
 
     private OAuth.Account getAccountInfo(ApiClient client) throws ApiException {
-        //TODO: check valid token
         OAuth.UserInfo userInfo = client.getUserInfo(client.getAccessToken());
         OAuth.Account accountInfo = null;
 
-        //TODO: fix the order of check
         if(DSConfig.TARGET_ACCOUNT_ID == null || DSConfig.TARGET_ACCOUNT_ID.length() == 0){
             List<OAuth.Account> accounts = userInfo.getAccounts();
 
