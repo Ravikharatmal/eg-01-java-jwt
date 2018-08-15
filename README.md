@@ -33,7 +33,7 @@ Requirements: Java v1.7, v1.8 or later
 * Download or clone this repository.
 * The project includes a Maven pom file.
 * Configure the project by copying
-  eg-01-java-jwt/src/main/resources/config-example.properties
+  `eg-01-java-jwt/src/main/resources/config-example.properties`
   to `config.properties` in the same directory and then
   updating the file. See the Configuration section, below,
   for more information.
@@ -50,31 +50,40 @@ SDK will solve this issue.
 
 See the [IntelliJ instructions]().
 
-### Configure the example's settings
+## Configure the example
 
-You can configure the example either via an .ini file or via
+You can configure the example either via a properties file or via
 environment variables:
 
-*  **ds_config.ini:** Edit the `ds_config.ini` file in the root
-   directory.
-   (After creating it from the `ds_config_EXAMPLE.ini` file.)
+*  **config.properties:** In the **src/main/resources/**
+   directory, copy the
+   `config-example.properties` file  to `config.properties`.
+
+   Then update it with your settings.
    More information for the configuration settings is below.
 *  Or via **environment variables:** export the needed
-   environment variables. The file `.env` lists the variables.
+   environment variables.
+   The variable names in the `config-example.properties` file
+   are the same as the needed environment variables.
 
-`ds_config.ini` is in the .gitignore file so your
+`config.properties` is in the .gitignore file so your
 private information will not be added to your repository.
 Do not store your Integration Key, private key, or other
 private information in your code repository.
 
 #### Creating the Integration Key
 Your DocuSign Integration Key must be configured for a JWT OAuth authentication flow:
-* Create a public/private key pair for the key. Store the private key
+* Using the DocuSign Admin tool,
+  create a public/private key pair for the integration key.
+  Store the private key
   in a secure location. You can use a file or a key vault.
 * The example requires the private key. Store the private key in the
-  `ds_config.ini` file or in the environment variable
+  `config.properties` file or in the environment variable
   `DS_PRIVATE_KEY`.
-* If you will be using individual permission grants, you must create a
+* Due to Java handling of multi-line strings, add the
+  text `\n\` at the end of each line of the private key.
+  See the example in the `config-example.properties` file.
+* If you will be using individual consent grants, you must create a
   `Redirect URI` for the key. Any URL can be used. By default, this
   example uses `https://www.docusign.com`
 
@@ -84,7 +93,7 @@ an individual or a user representing a group such as "HR".
 
 The example needs the guid assigned to the user.
 The guid value for each user in your account is available from
-the Administration tool in the **Users** section.
+the DocuSign Admin tool in the **Users** section.
 
 To see a user's guid, **Edit** the user's information.
 On the **Edit User** screen, the guid for the user is shown as
@@ -92,9 +101,7 @@ the `API Username`.
 
 ## Run the examples
 
-````
-php main.php
-````
+The project's main class is `com.docusign.example.jwt.JWTExample`
 
 ## Support, Contributions, License
 
