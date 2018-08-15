@@ -20,7 +20,7 @@ public class JWTExample {
     public static void main(String args[]) {
         try {
             System.setProperty("https.protocols","TLSv1.2");
-            System.out.println("\nSending an envelope...");
+            System.out.println("\nSending an envelope. The envelope includes HTML, Word, and PDF documents. It takes about 15 seconds for DocuSign to process the envelope request... ");
             EnvelopeSummary result = new SendEnvelope(apiClient).sendEnvelope();
             System.out.println(
                     String.format("Envelope status: %s. Envelope ID: %s",
