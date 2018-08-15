@@ -9,6 +9,7 @@ used with the example:
    repository
 
 **Step 2.** Start IntelliJ and choose the **Import Project** option.
+
 ![IntelliJ Import project](install_fig_1.png)
 
 **Step 3.** Use the popup file chooser to select the
