@@ -1,15 +1,6 @@
-# Example 1: Java Service Integration
+# Java JWT authentication code example
 
 Repository: [eg-01-java-jwt](https://github.com/docusign/eg-01-java-jwt)
-
-<!--
-## Articles and Screencasts
-
-* Guide: Using OAuth JWT flow with DocuSign.
-* Screencast: Using OAuth JWT flow with DocuSign.
-* Guide: Sending an envelope with the Node.JS SDK.
-* Screencast: Sending an example with Node.JS SDK.
--->
 
 ## Introduction
 
@@ -23,7 +14,7 @@ a user in the account.
 
 This launcher example includes two examples:
 1. Send an html, Word, and PDF file in an envelope to be signed.
-1. List the envelopes in the account that are less than 30 days old.
+1. List the envelopes in the account that changed in the last 30 days.
 
 ## Installation
 
@@ -32,19 +23,13 @@ Requirements: Java v1.7, v1.8 or later
 ### Short installation instructions
 * Download or clone this repository.
 * The project includes a Maven pom file.
-* Configure the project by copying
-  `eg-01-java-jwt/src/main/resources/config-example.properties`
-  to `config.properties` in the same directory and then
-  updating the file. See the Configuration section, below,
+* Configure the project's resource file:
+
+  `eg-01-java-jwt/src/main/resources/config.properties`
+  See the Configuration section, below,
   for more information.
 * The project's main class is
   `com.docusign.example.jwt.JWTExample`
-
-### Spurious warning message
-When run, the application will show a spurious
-warning message of `Could not reconstruct the public key`.
-This message should be ignored. A future version of the
-SDK will solve this issue.
 
 ### IntelliJ installation
 
@@ -56,19 +41,15 @@ You can configure the example either via a properties file or via
 environment variables:
 
 *  **config.properties:** In the **src/main/resources/**
-   directory, copy the
-   `config-example.properties` file  to `config.properties`.
-
-   Then update it with your settings.
+   directory, edit the `config.properties` file to update
+   it with your settings.
    More information for the configuration settings is below.
 *  Or via **environment variables:** export the needed
    environment variables.
-   The variable names in the `config-example.properties` file
+   The variable names in the `config.properties` file
    are the same as the needed environment variables.
 
-`config.properties` is in the .gitignore file so your
-private information will not be added to your repository.
-Do not store your Integration Key, private key, or other
+**Note:** do not store your Integration Key, private key, or other
 private information in your code repository.
 
 #### Creating the Integration Key
@@ -82,7 +63,7 @@ Your DocuSign Integration Key must be configured for a JWT OAuth authentication 
   `DS_PRIVATE_KEY`.
 * Due to Java handling of multi-line strings, add the
   text `\n\` at the end of each line of the private key.
-  See the example in the `config-example.properties` file.
+  See the example in the `config.properties` file.
 * If you will be using individual consent grants, you must create a
   `Redirect URI` for the key. Any URL can be used. By default, this
   example uses `https://www.docusign.com`
@@ -102,6 +83,22 @@ the `API Username`.
 ## Run the examples
 
 The project's main class is `com.docusign.example.jwt.JWTExample`
+
+### Consent
+With JWT authentication, your application will **impersonate** a
+DocuSign user in your account. To do so, your integration key
+must gain the **consent** of the person who will be impersonated.
+There are several methods availables:
+
+1. Recommended: use the Organization Administration feature to
+   preemptively grant consent. This technique requires that the
+   account have Organization administration enabled and the
+   email domain of the affected users must be claimed. SSO is
+   not required.
+1. Grant consent individually. Consent can be obtained for
+   each user by having the user follow the first leg in the
+   OAuth authorization code flow. The code example prints
+   the url that should be used if consent is required.
 
 ## Support, Contributions, License
 

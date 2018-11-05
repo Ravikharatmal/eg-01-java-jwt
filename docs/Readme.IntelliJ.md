@@ -43,9 +43,8 @@ be displayed in the IDE.
 ## Configuring the project
 Configure the example as discussed in the repository's Readme.
 
-You can use the IDE to copy
-`/src/main/resources/config-example.properties` to
-`config.properties` and then edit the file.
+You can use the IDE to edit the
+`/src/main/resources/config.properties` file.
 
 ## Running the example
 
