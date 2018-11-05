@@ -4,8 +4,5 @@ target/
 
 *.iml
 
-src/main/resources/config.properties
-src/main/resources/private-key.txt
-
 downloaded_documents/
 src/test/

@@ -35,35 +35,6 @@ public class DSHelper {
     }
 
     /**
-     * This method create temporary file from private key string
-     *
-     * @param fileSuffix - file name suffex
-     * @return
-     * @throws IOException
-     */
-    public static File createPrivateKeyTempFile(String fileSuffix) throws IOException {
-
-        File temp = null;
-        BufferedWriter writer = null;
-
-        try {
-            temp = File.createTempFile(fileSuffix,".tmp");
-            writer = new BufferedWriter(new FileWriter(temp.getAbsolutePath()));
-            writer.write(DSConfig.PRIVATE_KEY
-                    .replace("\\n\\","\n"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if(writer != null) {
-                writer.close();
-            }
-        }
-
-        return temp;
-    }
-
-
-    /**
      * This method printing pretty json format
      * @param arg - any object to be written as string
      */

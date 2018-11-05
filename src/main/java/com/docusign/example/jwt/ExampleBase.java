@@ -1,12 +1,12 @@
 package com.docusign.example.jwt;
 
-import com.docusign.esign.client.ApiClient;
-import com.docusign.esign.client.ApiException;
+import com.docusign.esign.client.*;
 import com.docusign.esign.client.auth.OAuth;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This is an example base class to be extended to show functionality example.
@@ -29,12 +29,10 @@ public class ExampleBase {
 
 
     public ExampleBase(ApiClient apiClient) throws IOException {
-        privateKeyTempFile = DSHelper.createPrivateKeyTempFile("private-key");
         this.apiClient =  apiClient;
     }
 
     protected void checkToken() throws IOException, ApiException {
-
         if(this._token == null
                 || (System.currentTimeMillis() + TOKEN_REPLACEMENT_IN_MILLISECONDS) > this.expiresIn) {
             updateToken();
@@ -44,18 +42,21 @@ public class ExampleBase {
     private void updateToken() throws IOException, ApiException {
         System.out.println("\nFetching an access token via JWT grant...");
 
-        // Note: this SDK method gives a spurious warning, "Could not reconstruct the public key"
-        // which should be ignored. A forthcoming version of the SDK will fix the issue.
-        apiClient.configureJWTAuthorizationFlow(
-                privateKeyTempFile.getAbsolutePath(),
-                privateKeyTempFile.getAbsolutePath(),
-                DSConfig.AUD(),
+        java.util.List<String> scopes = new ArrayList<String>();
+        // Only signature scope is needed. Impersonation scope is implied.
+        scopes.add(OAuth.Scope_SIGNATURE);
+        String privateKey = DSConfig.PRIVATE_KEY.replace("\\n","\n");
+        byte[] privateKeyBytes = privateKey.getBytes();
+        apiClient.setOAuthBasePath(DSConfig.DS_AUTH_SERVER);
+
+        OAuth.OAuthToken oAuthToken = apiClient.requestJWTUserToken (
                 DSConfig.CLIENT_ID,
                 DSConfig.IMPERSONATED_USER_GUID,
+                scopes,
+                privateKeyBytes,
                 TOKEN_EXPIRATION_IN_SECONDS);
+        apiClient.setAccessToken(oAuthToken.getAccessToken(), oAuthToken.getExpiresIn());
         System.out.println("Done. Continuing...\n");
-        //TODO: this is work around to fix incorrect set basePath account
-        apiClient.setBasePath(null);
 
         if(_account == null)
             _account = this.getAccountInfo(apiClient);
@@ -63,8 +64,7 @@ public class ExampleBase {
         apiClient.setBasePath(_account.getBaseUri() + "/restapi");
 
         _token = apiClient.getAccessToken();
-        //notice that expiresIn value is not exposed yet by the SDK so, we will assume it as 1 hours.
-        expiresIn = System.currentTimeMillis() + (TOKEN_EXPIRATION_IN_SECONDS * 1000);
+        expiresIn = System.currentTimeMillis() + (oAuthToken.getExpiresIn() * 1000);
     }
 
     private OAuth.Account getAccountInfo(ApiClient client) throws ApiException {
