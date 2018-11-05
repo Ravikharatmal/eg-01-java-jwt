@@ -24,7 +24,6 @@ public final class DSConfig {
     public static final String SIGNER_NAME;
     public static final String CC_EMAIL;
     public static final String CC_NAME;
-    public static final String PRIVATE_KEY_FILE;
     public static final String PRIVATE_KEY;
     public static final String AUTHENTICATION_URL = "https://account-d.docusign.com";
     public static final String DS_AUTH_SERVER;
@@ -57,7 +56,6 @@ public final class DSConfig {
         SIGNER_NAME = fetchValue(config, "DS_SIGNER_1_NAME");
         CC_EMAIL = fetchValue(config, "DS_CC_1_EMAIL");
         CC_NAME = fetchValue(config, "DS_CC_1_NAME");
-        PRIVATE_KEY_FILE = fetchValue(config, "DS_PRIVATE_KEY_FILE");
         PRIVATE_KEY = fetchValue(config, "DS_PRIVATE_KEY");
         DS_AUTH_SERVER = fetchValue(config, "DS_AUTH_SERVER"); // use account.docusign.com for production
     }
@@ -72,7 +70,7 @@ public final class DSConfig {
     private static String fetchValue(Map<String, String> config, String name) {
         String val = config.get(name);
 
-        if(("DS_PRIVATE_KEY_FILE".equals(name) || "DS_TARGET_ACCOUNT_ID".equals(name))
+        if("DS_TARGET_ACCOUNT_ID".equals(name))
                 && "FALSE".equals(val)) {
             return null;
         }
