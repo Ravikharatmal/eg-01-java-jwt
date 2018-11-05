@@ -70,8 +70,7 @@ public final class DSConfig {
     private static String fetchValue(Map<String, String> config, String name) {
         String val = config.get(name);
 
-        if("DS_TARGET_ACCOUNT_ID".equals(name))
-                && "FALSE".equals(val)) {
+        if("DS_TARGET_ACCOUNT_ID".equals(name) && "FALSE".equals(val)) {
             return null;
         }
 
