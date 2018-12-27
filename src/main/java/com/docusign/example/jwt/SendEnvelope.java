@@ -52,39 +52,48 @@ class SendEnvelope extends ExampleBase {
     public EnvelopeSummary sendEnvelope() throws ApiException, IOException {
 
         this.checkToken();
-        EnvelopeDefinition envelope = this.createEvelope();
-        EnvelopesApi envelopeApi = new EnvelopesApi(this.apiClient);
-        EnvelopeSummary results = envelopeApi.createEnvelope(this.getAccountId(), envelope);
-        return results;
-    }
-    /**
-     * This method creates envelope from template
-     *
-     * @return instance of EnvelopeDefinition
-     */
-    public EnvelopeDefinition createEvelope() throws IOException {
+
         EnvelopeDefinition envelopeDefinition = new EnvelopeDefinition();
         envelopeDefinition.setEmailSubject("Please sign this document sent from the Java SDK");
 
-        Document doc1 = createDocumentFromTemplate("1","Order acknowledgement","html",
-                ENVELOPE_1_DOCUMENT_1.getBytes());
-        Document doc2 = createDocumentFromTemplate("2","Battle Plan","docx",
-                DSHelper.readContent(DOC_2_DOCX));
-        Document doc3 = createDocumentFromTemplate("3","Lorem Ipsum","pdf",
-                DSHelper.readContent(DOC_3_PDF));
+        Document doc1 = new Document();
+        doc1.setDocumentBase64(new String(Base64.encode(ENVELOPE_1_DOCUMENT_1.getBytes())));
+        doc1.setName("Order acknowledgement");
+        doc1.setFileExtension("html");
+        doc1.setDocumentId("1");
+
+        Document doc2 = new Document();
+        doc2.setDocumentBase64(new String(Base64.encode(DSHelper.readContent(DOC_2_DOCX))));
+        doc2.setName("Battle Plan");
+        doc2.setFileExtension("docx");
+        doc2.setDocumentId("2");
+
+        Document doc3 = new Document();
+        doc3.setDocumentBase64(new String(Base64.encode(DSHelper.readContent(DOC_3_PDF))));
+        doc3.setName("Lorem Ipsum");
+        doc3.setFileExtension("pdf");
+        doc3.setDocumentId("3");
 
         // The order in the docs array determines the order in the envelope
         envelopeDefinition.setDocuments(Arrays.asList(doc1, doc2, doc3));
         // create a signer recipient to sign the document, identified by name and email
         // We're setting the parameters via the object creation
-        Signer signer1 = createSigner();
+        Signer signer1 = new Signer();
+        signer1.setEmail(DSConfig.SIGNER_EMAIL);
+        signer1.setName(DSConfig.SIGNER_NAME);
+        signer1.setRecipientId("1");
+        signer1.setRoutingOrder("1");
         // routingOrder (lower means earlier) determines the order of deliveries
         // to the recipients. Parallel routing order is supported by using the
         // same integer as the order for two or more recipients.
 
         // create a cc recipient to receive a copy of the documents, identified by name and email
         // We're setting the parameters via setters
-        CarbonCopy cc1 = createCarbonCopy();
+        CarbonCopy cc1 = new CarbonCopy();
+        cc1.setEmail(DSConfig.CC_EMAIL);
+        cc1.setName(DSConfig.CC_NAME);
+        cc1.setRoutingOrder("2");
+        cc1.setRecipientId("2");
         // Create signHere fields (also known as tabs) on the documents,
         // We're using anchor (autoPlace) positioning
         //
@@ -92,121 +101,33 @@ class SendEnvelope extends ExampleBase {
         // documents for matching anchor strings. So the
         // sign_here_2 tab will be used in both document 2 and 3 since they
         // use the same anchor string for their "signer 1" tabs.
-        SignHere signHere1 = createSignHere("**signature_1**","pixels", "20","10");
-        SignHere signHere2 = createSignHere("/sn1/","pixels", "20","10");
+        SignHere signHere1 = new SignHere();
+        signHere1.setAnchorString("**signature_1**");
+        signHere1.setAnchorUnits("pixels");
+        signHere1.setAnchorXOffset("20");
+        signHere1.anchorYOffset("10");
+
+        SignHere signHere2 = new SignHere();
+        signHere2.setAnchorString("/sn1/");
+        signHere2.setAnchorUnits("pixels");
+        signHere2.setAnchorXOffset("20");
+        signHere2.anchorYOffset("10");
         // Tabs are set per recipient / signer
-        setSignerTabs(signer1, signHere1, signHere2);
+        Tabs tabs = new Tabs();
+        tabs.setSignHereTabs(Arrays.asList(signHere1, signHere2));
+        signer1.setTabs(tabs);
         // Add the recipients to the envelope object
-        Recipients recipients = createRecipients(signer1, cc1);
+        Recipients recipients = new Recipients();
+        recipients.setSigners(Arrays.asList(signer1));
+        recipients.setCarbonCopies(Arrays.asList(cc1));
         envelopeDefinition.setRecipients(recipients);
         // Request that the envelope be sent by setting |status| to "sent".
         // To request that the envelope be created as a draft, set to "created"
         envelopeDefinition.setStatus("sent");
 
-        return envelopeDefinition;
+        EnvelopesApi envelopeApi = new EnvelopesApi(this.apiClient);
+        EnvelopeSummary results = envelopeApi.createEnvelope(this.getAccountId(), envelopeDefinition);
+
+        return results;
     }
-
-    /**
-     * ﻿This method creates Recipients instance and populates its signers and carbon copies
-     *
-     * @param signer
-     * @param cc
-     * @return
-     */
-    private Recipients createRecipients(Signer signer, CarbonCopy cc) {
-
-        Recipients recipients = new Recipients();
-        recipients.setSigners(Arrays.asList(signer));
-        recipients.setCarbonCopies(Arrays.asList(cc));
-
-        return recipients;
-    }
-
-    /**
-     *
-     * ﻿This method create Tabs
-     *
-     * @param signer - ﻿Signer instance to be set tabs
-     * @param signers - ﻿SignHere array
-     */
-    private void setSignerTabs(Signer signer, SignHere...signers) {
-        Tabs tabs = new Tabs();
-        tabs.setSignHereTabs(Arrays.asList(signers));
-        signer.setTabs(tabs);
-    }
-
-    /**
-     *﻿ This method create SignHere anchor
-     *
-     * @param anchorPattern ﻿- anchor pattern
-     * @param anchorUnits -﻿ anchor units
-     * @param anchorXOffset - ﻿anchor x offset
-     * @param anchorYOffset - ﻿anchor y offset
-     * @return
-     */
-    private SignHere createSignHere(String anchorPattern, String anchorUnits,
-                                    String anchorXOffset, String anchorYOffset) {
-        SignHere signHere = new SignHere();
-        signHere.setAnchorString(anchorPattern);
-        signHere.setAnchorUnits(anchorUnits);
-        signHere.setAnchorXOffset(anchorXOffset);
-        signHere.anchorYOffset(anchorYOffset);
-        return signHere;
-    }
-
-    /**
-     * This method creates CarbonCopy instance and populate its members
-     *
-     * @return {CarbonCopy} instance
-     */
-    private CarbonCopy createCarbonCopy() {
-        CarbonCopy cc = new CarbonCopy();
-        cc.setEmail(DSConfig.CC_EMAIL);
-        cc.setName(DSConfig.CC_NAME);
-        cc.setRoutingOrder("2");
-        cc.setRecipientId("2");
-        return cc;
-    }
-
-    /**
-     * ﻿This method creates Signer instance and populates its members
-     *
-     * @return Signer instance
-     */
-    private Signer createSigner() {
-        Signer signer = new Signer();
-        signer.setEmail(DSConfig.SIGNER_EMAIL);
-        signer.setName(DSConfig.SIGNER_NAME);
-        signer.setRecipientId("1");
-        signer.setRoutingOrder("1");
-        return signer;
-    }
-
-    /**
-     * helper method to create document from String content template
-     * @param id document id
-     * @param name file name
-     * @param fileExtension file extension
-     * @param content file content as String
-     * @return Document
-     */
-    private Document createDocumentFromTemplate(String id,String name, String fileExtension, byte [] content){
-
-        Document document = new Document();
-
-        String base64Content = new String(Base64.encode(content));
-
-        document.setDocumentBase64(base64Content);
-        // can be different from actual file name
-        document.setName(name);
-        // Source data format. Signed docs are always pdf.
-        document.setFileExtension(fileExtension);
-        // a label used to reference the doc
-        document.setDocumentId(id);
-
-        return document;
-    }
-
-
-
 }

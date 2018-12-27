@@ -27,7 +27,7 @@ public class JWTExample {
                     result.getStatus(),
                     result.getEnvelopeId()));
 
-            System.out.println("\nListing envelopes in the account...");
+            System.out.println("\nListing envelopes in the account whose status changed in the last 30 days...");
             EnvelopesInformation envelopesList = new ListEnvelopes(apiClient).list();
 
             List<Envelope> envelopes = envelopesList.getEnvelopes();
